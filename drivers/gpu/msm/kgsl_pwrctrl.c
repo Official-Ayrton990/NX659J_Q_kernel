@@ -3363,7 +3363,12 @@ int kgsl_pwrctrl_set_default_gpu_pwrlevel(struct kgsl_device *device)
 	 * If thermal cycling is required and the new level hits the
 	 * thermal limit, kick off the cycling.
 	 */
-	kgsl_pwrctrl_set_thermal_cycle(device, new_level);
+	/*
+	 * Avoid userspace to mess with crazy changes to pwrlevel
+	 */
+	#if 0
+	new_level = kgsl_pwrctrl_adjust_pwrlevel(device, new_level);
+	#endif
 
 	pwr->active_pwrlevel = new_level;
 	pwr->previous_pwrlevel = old_level;
